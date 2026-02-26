@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#7C3AED" />
+  <meta name="description" content="RaisoSpot – your campus, in one spot." />
+  <title>RaisoSpot</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body class="light" data-page="feed">
+
+  <!-- ONBOARDING -->
+  <div id="onboarding" class="hidden">
+    <div class="onboarding-bg"></div>
+    <div class="onboarding-bg-img">
+      <img src="RaisoSpot2.png" alt="RaisoSpot" />
+    </div>
+    <div class="onboarding-card">
+      <div class="onboarding-slides">
+        <div class="slide active">
+          <h1>Welcome to<br><span>RaisoSpot</span></h1>
+          <p>Your campus, in one spot.</p>
+        </div>
+        <div class="slide">
+          <div class="slide-emoji">🔍</div>
+          <h2>Explore everything</h2>
+          <p>Posts, confessions, notes, and events — no login needed to browse.</p>
+        </div>
+        <div class="slide">
+          <div class="slide-emoji">✨</div>
+          <h2>Join the conversation</h2>
+          <p>Login to post, confess, like, comment & contribute to your campus community.</p>
+          <button id="ob-google-btn" class="btn-google">
+            <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+            Continue with Google
+          </button>
+          <button id="ob-skip-btn" class="btn-skip">Skip for now</button>
+          <p class="disclaimer-small">RaisoSpot is a student-run platform created by students for students. It is not officially managed, endorsed, or affiliated with GH Raisoni College.</p>
+        </div>
+      </div>
+      <div class="slide-dots">
+        <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+      <button id="ob-next" class="btn-next">Next →</button>
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div id="login-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box">
+      <button class="modal-close">✕</button>
+      <div class="modal-emoji">👀✨</div>
+      <h3>Login to join the conversation</h3>
+      <p>Post, like, comment and be part of your campus community.</p>
+      <button id="modal-google-btn" class="btn-google">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+        Continue with Google
+      </button>
+    </div>
+  </div>
+
+  <!-- CREATE POST MODAL -->
+  <div id="create-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box create-modal-box">
+      <button class="modal-close">✕</button>
+      <h3>Create Post</h3>
+      <div class="create-options">
+        <button class="create-opt" data-type="image">
+          <span class="opt-icon">🖼️</span><span>Image Post</span>
+        </button>
+        <button class="create-opt" data-type="confession">
+          <span class="opt-icon">🎭</span><span>Confession</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGE POST MODAL -->
+  <div id="image-post-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box tall-modal">
+      <button class="modal-close">✕</button>
+      <h3>New Post</h3>
+      <div class="form-group">
+        <div id="image-drop-zone" class="drop-zone">
+          <span>📷 Tap to add images (max 2)</span>
+          <input type="file" id="image-input" accept="image/*" multiple />
+        </div>
+        <div id="image-previews" class="image-previews"></div>
+      </div>
+      <div class="form-group">
+        <textarea id="post-caption" placeholder="Write a caption..." rows="3"></textarea>
+      </div>
+      <button id="submit-post" class="btn-primary">Post 🚀</button>
+    </div>
+  </div>
+
+  <!-- CONFESSION MODAL -->
+  <div id="confession-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box tall-modal">
+      <button class="modal-close">✕</button>
+      <h3>Anonymous Confession 🎭</h3>
+      <p class="warning-text">⚠️ No names. No targeting. Be respectful.</p>
+      <div class="form-group">
+        <select id="confession-category">
+          <option value="">Select category...</option>
+          <option value="crush">💕 Crush / Love</option>
+          <option value="rant">😤 College Rant</option>
+          <option value="funny">😂 Funny / Embarrassing</option>
+          <option value="academic">📚 Academic Stress</option>
+          <option value="social">👥 Friends / Social Life</option>
+          <option value="secret">🤫 Secret / Guilt</option>
+          <option value="motivation">💪 Motivation / Positivity</option>
+          <option value="other">💬 Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <textarea id="confession-text" placeholder="Share your confession anonymously..." rows="5"></textarea>
+      </div>
+      <button id="submit-confession" class="btn-primary">Confess Anonymously 🎭</button>
+    </div>
+  </div>
+
+  <!-- COMMENT MODAL -->
+  <div id="comment-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box tall-modal">
+      <button class="modal-close">✕</button>
+      <h3>Comments</h3>
+      <div id="comments-list" class="comments-list"></div>
+      <div class="comment-input-row">
+        <input type="text" id="comment-input" placeholder="Write a comment..." />
+        <button id="submit-comment" class="btn-icon">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT CAPTION MODAL -->
+  <div id="edit-caption-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box tall-modal" id="edit-caption-modal">
+      <button class="modal-close">✕</button>
+      <h3>Edit Caption</h3>
+      <textarea id="edit-caption-text" rows="4" placeholder="Edit your caption..."></textarea>
+      <button id="save-caption-btn" class="btn-primary">Save Changes</button>
+    </div>
+  </div>
+
+  <!-- BUG MODAL -->
+  <div id="bug-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box">
+      <button class="modal-close">✕</button>
+      <h3>🐛 Report a Bug</h3>
+      <textarea id="bug-text" placeholder="Describe what happened..." rows="4"></textarea>
+      <button id="submit-bug" class="btn-primary" style="margin-top:12px">Submit Report</button>
+    </div>
+  </div>
+
+  <!-- REPORT POST MODAL -->
+  <div id="report-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box tall-modal">
+      <button class="modal-close">✕</button>
+      <h3>🚩 Report Post</h3>
+      <p style="color:var(--text2);font-size:14px;margin-bottom:12px">Why are you reporting this post?</p>
+      <div class="report-cats">
+        <button class="report-cat-btn" data-cat="spam">📢 Spam or misleading</button>
+        <button class="report-cat-btn" data-cat="harassment">😡 Harassment or hate</button>
+        <button class="report-cat-btn" data-cat="inappropriate">🔞 Inappropriate or sexual content</button>
+        <button class="report-cat-btn" data-cat="violence">⚠️ Violence or dangerous activity</button>
+        <button class="report-cat-btn" data-cat="misinformation">❌ False information</button>
+        <button class="report-cat-btn" data-cat="other">💬 Other</button>
+      </div>
+      <textarea id="report-other-input" class="hidden" placeholder="Tell us more (optional)..." rows="3" style="margin-top:10px"></textarea>
+      <button id="submit-report-btn" class="btn-primary" style="margin-top:14px">Submit Report</button>
+    </div>
+  </div>
+
+  <!-- LOST ITEM MODAL -->
+  <div id="lost-item-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box tall-modal">
+      <button class="modal-close">✕</button>
+      <h3>Report Lost/Found Item</h3>
+      <select id="item-type">
+        <option value="lost">I Lost Something</option>
+        <option value="found">I Found Something</option>
+      </select>
+      <input type="text" id="item-name" placeholder="Item name/description" />
+      <input type="text" id="item-location" placeholder="Location (e.g. Library, Canteen)" />
+      <input type="text" id="item-contact" placeholder="Contact info (optional)" />
+      <button id="submit-item" class="btn-primary">Submit</button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="logo-wrap">
+      <img src="RaisoSpot.png" alt="RaisoSpot" class="logo-img" />
+      <span class="logo-text">RaisoSpot</span>
+    </div>
+    <div class="header-right">
+      <button id="search-btn" class="icon-btn" title="Search">🔍</button>
+      <div id="user-avatar-wrap" class="hidden">
+        <img id="user-avatar" class="avatar" alt="Profile" />
+      </div>
+      <button id="header-login-btn" class="btn-login-small">Login</button>
+    </div>
+  </header>
+
+  <!-- SEARCH BAR -->
+  <div id="search-bar" class="search-bar hidden">
+    <input type="text" id="search-input" placeholder="Search posts, events, notes..." />
+    <button id="search-close">✕</button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main id="main-content">
+
+    <!-- FEED -->
+    <section id="page-feed" class="page active">
+      <div class="feed-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="confession">Confessions</button>
+        <button class="filter-btn" data-filter="event">Events</button>
+        <button class="filter-btn" data-filter="announcement">📌 Pinned</button>
+      </div>
+      <div id="feed-container" class="feed-container">
+        <div class="skeleton-loader">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+      </div>
+      <p class="refresh-hint" id="refresh-hint">↻ Refresh the page if nothing is showing up</p>
+    </section>
+
+    <!-- ACADEMICS -->
+    <section id="page-academics" class="page">
+      <div class="page-header-inner"><h2>Academics</h2></div>
+      <div class="year-tabs">
+        <button class="year-tab active" data-year="1">1st Year</button>
+        <button class="year-tab" data-year="2">2nd Year</button>
+        <button class="year-tab" data-year="3">3rd Year</button>
+        <button class="year-tab" data-year="4">4th Year</button>
+      </div>
+      <div id="academics-content"></div>
+    </section>
+
+    <!-- OPPORTUNITIES -->
+    <section id="page-opportunities" class="page">
+      <div class="page-header-inner"><h2>Opportunities</h2></div>
+      <div class="opp-filters">
+        <select id="opp-type-filter">
+          <option value="">All Types</option>
+          <option value="internship">Internship</option>
+          <option value="placement">Placement</option>
+          <option value="hackathon">Hackathon</option>
+          <option value="competition">Competition</option>
+        </select>
+        <select id="opp-year-filter">
+          <option value="">All Years</option>
+          <option value="1">1st Year</option>
+          <option value="2">2nd Year</option>
+          <option value="3">3rd Year</option>
+          <option value="4">4th Year</option>
+        </select>
+      </div>
+      <div id="opportunities-container" class="opportunities-container"></div>
+    </section>
+
+    <!-- MORE PAGE -->
+    <section id="page-more" class="page">
+      <div class="page-header-inner"><h2>More</h2></div>
+      <div class="more-list">
+
+        <button class="more-item" id="more-bug-btn">
+          <span class="more-item-icon">🐛</span> Report a Bug
+        </button>
+
+        <button class="more-item" id="more-map-btn">
+          <span class="more-item-icon">🗺️</span> Campus Map
+        </button>
+
+        <button class="more-item" id="more-lf-btn">
+          <span class="more-item-icon">🔎</span> Lost &amp; Found
+        </button>
+
+        <button class="more-item" id="more-emergency-btn">
+          <span class="more-item-icon">🆘</span> Emergency &amp; Help
+        </button>
+
+        <!-- Settings toggle -->
+        <button class="more-item" id="more-settings-toggle">
+          <span class="more-item-icon">⚙️</span> Settings
+          <span style="margin-left:auto;font-size:18px" id="settings-arrow">▾</span>
+        </button>
+
+        <div id="more-settings-dropdown" class="more-settings-dropdown hidden">
+          <div class="settings-dropdown-inner">
+            <!-- Profile section -->
+            <div id="settings-profile-inline" class="setting-row hidden" style="flex-direction:column;align-items:flex-start;gap:8px">
+              <div class="profile-card" style="margin-bottom:0">
+                <img id="settings-avatar" class="avatar-large" alt="" />
+                <div>
+                  <p id="settings-name" class="profile-name"></p>
+                  <p id="settings-email" class="profile-email"></p>
+                </div>
+              </div>
+              <button id="logout-btn" class="btn-danger" style="margin-top:4px">Logout</button>
+            </div>
+            <div id="settings-guest-inline" class="setting-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+              <p style="color:var(--text2);font-size:14px">Browsing as guest</p>
+              <button id="settings-login-btn" class="btn-google" style="width:auto;padding:10px 16px;font-size:13px">
+                <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+                Login with Google
+              </button>
+            </div>
+            <div class="setting-row">
+              <span>🌙 Dark Mode</span>
+              <label class="toggle"><input type="checkbox" id="dark-toggle" /><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <span>🎞️ Reduce Animations</span>
+              <label class="toggle"><input type="checkbox" id="anim-toggle" /><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row" style="border-bottom:none">
+              <p class="disclaimer-text" style="font-size:12px;margin:0">RaisoSpot is a student-run platform created by students for students. Not officially affiliated with GH Raisoni College.</p>
+            </div>
+            <div class="setting-row" style="border-bottom:none;justify-content:center;padding-top:4px">
+              <span style="font-size:12px;color:var(--text3);font-weight:600">Version 1.0</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sub-panels inside More page -->
+      <div id="more-map-panel" class="hidden" style="padding:0 16px 24px">
+        <h4 style="font-family:var(--font-display);font-weight:700;font-size:16px;margin-bottom:12px">🗺️ Campus Map</h4>
+        <div class="map-placeholder">
+          <div class="map-marker" style="top:30%;left:40%">🏫<span>Main Building</span></div>
+          <div class="map-marker" style="top:55%;left:25%">📚<span>Library</span></div>
+          <div class="map-marker" style="top:60%;left:60%">🍔<span>Canteen</span></div>
+          <div class="map-marker" style="top:20%;left:65%">🔬<span>Labs</span></div>
+          <div class="map-marker" style="top:75%;left:45%">🖨️<span>Xerox</span></div>
+        </div>
+      </div>
+
+      <div id="more-lf-panel" class="hidden" style="padding:0 16px 24px">
+        <h4 style="font-family:var(--font-display);font-weight:700;font-size:16px;margin-bottom:12px">🔎 Lost &amp; Found</h4>
+        <div class="lf-tabs">
+          <button class="lf-tab active" data-tab="lost">Lost</button>
+          <button class="lf-tab" data-tab="found">Found</button>
+          <button class="lf-tab" data-tab="resolved">Resolved</button>
+        </div>
+        <div id="lost-found-container"></div>
+        <button id="report-item-btn" class="btn-secondary" style="margin-top:8px">+ Report Item</button>
+      </div>
+
+      <div id="more-emergency-panel" class="hidden" style="padding:0 16px 24px">
+        <div style="border:2px solid var(--danger);border-radius:var(--radius);padding:16px">
+          <h4 style="font-family:var(--font-display);font-weight:700;font-size:16px;margin-bottom:12px">🆘 Emergency &amp; Help</h4>
+          <a href="tel:1800-180-5522" class="btn-emergency">📞 Emergency / Anti-Ragging</a>
+          <div class="help-links">
+            <a href="tel:112">🚑 Medical: 112</a>
+            <a href="tel:+917122662600">📞 College Helpline</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE PAGE -->
+    <section id="page-profile" class="page profile-page">
+      <div class="profile-header">
+        <div class="profile-avatar-wrap">
+          <img id="profile-avatar-img" src="" alt="Profile" />
+          <button class="profile-avatar-edit" id="profile-avatar-edit-btn" title="Edit photo">✏️</button>
+          <input type="file" id="profile-avatar-input" accept="image/*" style="display:none" />
+        </div>
+        <div id="profile-username-display" class="profile-username"></div>
+        <div id="profile-email-display" class="profile-email-small"></div>
+        <div class="profile-edit-row">
+          <input type="text" id="profile-name-input" placeholder="Edit username..." />
+          <button class="btn-save-name" id="save-profile-name">Save</button>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="profile-stat-num" id="profile-post-count">0</div>
+          <div class="profile-stat-label">Posts</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-num" id="profile-like-count">0</div>
+          <div class="profile-stat-label">Likes</div>
+        </div>
+      </div>
+      <div id="profile-grid" class="profile-grid"></div>
+      <div id="profile-empty" class="empty-state hidden">
+        <div class="empty-icon">📷</div>
+        <h3>No posts yet</h3>
+        <p>Your posts will appear here</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-page="feed">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Feed</span>
+    </button>
+    <button class="nav-btn" data-page="academics">
+      <span class="nav-icon">📚</span>
+      <span class="nav-label">Academics</span>
+    </button>
+    <button id="create-btn" class="nav-btn create-btn">
+      <span class="nav-icon create-icon">＋</span>
+    </button>
+    <button class="nav-btn" data-page="opportunities">
+      <span class="nav-icon">💼</span>
+      <span class="nav-label">Opportunities</span>
+    </button>
+    <button class="nav-btn" data-page="more">
+      <span class="nav-icon">☰</span>
+      <span class="nav-label">More</span>
+    </button>
+  </nav>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/feed.js"></script>
+  <script src="js/academics.js"></script>
+  <script src="js/opportunities.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
