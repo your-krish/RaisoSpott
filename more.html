@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#7C3AED" />
+  <title>RaisoSpot – More</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body class="light" data-page="more">
+
+  <!-- LOGIN MODAL -->
+  <div id="login-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box">
+      <button class="modal-close">✕</button>
+      <div class="modal-emoji">👀✨</div>
+      <h3>Login to join the conversation</h3>
+      <button id="modal-google-btn" class="btn-google">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+        Continue with Google
+      </button>
+    </div>
+  </div>
+
+  <!-- BUG MODAL -->
+  <div id="bug-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box">
+      <button class="modal-close">✕</button>
+      <h3>🐛 Report a Bug</h3>
+      <textarea id="bug-text" placeholder="Describe what happened..." rows="4"></textarea>
+      <button id="submit-bug" class="btn-primary" style="margin-top:12px">Submit Report</button>
+    </div>
+  </div>
+
+  <!-- LOST ITEM MODAL -->
+  <div id="lost-item-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box tall-modal">
+      <button class="modal-close">✕</button>
+      <h3>Report Lost/Found Item</h3>
+      <select id="item-type">
+        <option value="lost">I Lost Something</option>
+        <option value="found">I Found Something</option>
+      </select>
+      <input type="text" id="item-name" placeholder="Item name/description" />
+      <input type="text" id="item-location" placeholder="Location (e.g. Library, Canteen)" />
+      <input type="text" id="item-contact" placeholder="Contact info (optional)" />
+      <button id="submit-item" class="btn-primary">Submit</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <header class="app-header">
+    <div class="logo-wrap">
+      <img src="RaisoSpot.png" alt="RaisoSpot" class="logo-img" />
+      <span class="logo-text">RaisoSpot</span>
+    </div>
+    <div class="header-right">
+      <div id="user-avatar-wrap" class="hidden">
+        <img id="user-avatar" class="avatar" alt="Profile" />
+      </div>
+      <button id="header-login-btn" class="btn-login-small">Login</button>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div class="page-header-inner"><h2>More</h2></div>
+    <div class="more-list">
+
+      <button class="more-item" id="more-bug-btn">
+        <span class="more-item-icon">🐛</span> Report a Bug
+      </button>
+
+      <button class="more-item" id="more-map-btn">
+        <span class="more-item-icon">🗺️</span> Campus Map
+      </button>
+
+      <button class="more-item" id="more-lf-btn">
+        <span class="more-item-icon">🔎</span> Lost &amp; Found
+      </button>
+
+      <button class="more-item" id="more-emergency-btn">
+        <span class="more-item-icon">🆘</span> Emergency &amp; Help
+      </button>
+
+      <!-- Settings toggle -->
+      <button class="more-item" id="more-settings-toggle">
+        <span class="more-item-icon">⚙️</span> Settings
+        <span style="margin-left:auto;font-size:18px" id="settings-arrow">▾</span>
+      </button>
+
+      <div id="more-settings-dropdown" class="more-settings-dropdown hidden">
+        <div class="settings-dropdown-inner">
+          <div id="settings-profile-inline" class="setting-row hidden" style="flex-direction:column;align-items:flex-start;gap:8px">
+            <div class="profile-card" style="margin-bottom:0">
+              <img id="settings-avatar" class="avatar-large" alt="" />
+              <div>
+                <p id="settings-name" class="profile-name"></p>
+                <p id="settings-email" class="profile-email"></p>
+              </div>
+            </div>
+            <a href="profile.html" class="btn-secondary" style="margin-top:4px;text-decoration:none;text-align:center">👤 View Profile</a>
+            <button id="logout-btn" class="btn-danger" style="margin-top:4px">Logout</button>
+          </div>
+          <div id="settings-guest-inline" class="setting-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+            <p style="color:var(--text2);font-size:14px">Browsing as guest</p>
+            <button id="settings-login-btn" class="btn-google" style="width:auto;padding:10px 16px;font-size:13px">
+              <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+              Login with Google
+            </button>
+          </div>
+          <div class="setting-row">
+            <span>🌙 Dark Mode</span>
+            <label class="toggle"><input type="checkbox" id="dark-toggle" /><span class="toggle-slider"></span></label>
+          </div>
+          <div class="setting-row">
+            <span>🎞️ Reduce Animations</span>
+            <label class="toggle"><input type="checkbox" id="anim-toggle" /><span class="toggle-slider"></span></label>
+          </div>
+          <div class="setting-row" style="border-bottom:none">
+            <p class="disclaimer-text" style="font-size:12px;margin:0">RaisoSpot is a student-run platform. Not officially affiliated with GH Raisoni College.</p>
+          </div>
+          <div class="setting-row" style="border-bottom:none;justify-content:center;padding-top:4px">
+            <span style="font-size:12px;color:var(--text3);font-weight:600">Version 1.0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-panels -->
+    <div id="more-map-panel" class="hidden" style="padding:0 16px 24px">
+      <h4 style="font-family:var(--font-display);font-weight:700;font-size:16px;margin-bottom:12px">🗺️ Campus Map</h4>
+      <div class="map-placeholder">
+        <div class="map-marker" style="top:30%;left:40%">🏫<span>Main Building</span></div>
+        <div class="map-marker" style="top:55%;left:25%">📚<span>Library</span></div>
+        <div class="map-marker" style="top:60%;left:60%">🍔<span>Canteen</span></div>
+        <div class="map-marker" style="top:20%;left:65%">🔬<span>Labs</span></div>
+        <div class="map-marker" style="top:75%;left:45%">🖨️<span>Xerox</span></div>
+      </div>
+    </div>
+
+    <div id="more-lf-panel" class="hidden" style="padding:0 16px 24px">
+      <h4 style="font-family:var(--font-display);font-weight:700;font-size:16px;margin-bottom:12px">🔎 Lost &amp; Found</h4>
+      <div class="lf-tabs">
+        <button class="lf-tab active" data-tab="lost">Lost</button>
+        <button class="lf-tab" data-tab="found">Found</button>
+        <button class="lf-tab" data-tab="resolved">Resolved</button>
+      </div>
+      <div id="lost-found-container"></div>
+      <button id="report-item-btn" class="btn-secondary" style="margin-top:8px">+ Report Item</button>
+    </div>
+
+    <div id="more-emergency-panel" class="hidden" style="padding:0 16px 24px">
+      <div style="border:2px solid var(--danger);border-radius:var(--radius);padding:16px">
+        <h4 style="font-family:var(--font-display);font-weight:700;font-size:16px;margin-bottom:12px">🆘 Emergency &amp; Help</h4>
+        <a href="tel:1800-180-5522" class="btn-emergency">📞 Emergency / Anti-Ragging</a>
+        <div class="help-links">
+          <a href="tel:112">🚑 Medical: 112</a>
+          <a href="tel:+917122662600">📞 College Helpline</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-link" data-page="feed">
+      <span class="nav-icon">🏠</span><span class="nav-label">Feed</span>
+    </a>
+    <a href="academics.html" class="nav-link" data-page="academics">
+      <span class="nav-icon">📚</span><span class="nav-label">Academics</span>
+    </a>
+    <a href="index.html" class="nav-btn create-btn">
+      <span class="nav-icon create-icon">＋</span>
+    </a>
+    <a href="opportunities.html" class="nav-link" data-page="opportunities">
+      <span class="nav-icon">💼</span><span class="nav-label">Opportunities</span>
+    </a>
+    <a href="more.html" class="nav-link active" data-page="more">
+      <span class="nav-icon">☰</span><span class="nav-label">More</span>
+    </a>
+  </nav>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/common.js"></script>
+  <script>
+    window.pageInit = function() {
+      // Settings toggle
+      document.getElementById('more-settings-toggle')?.addEventListener('click', () => {
+        const dropdown = document.getElementById('more-settings-dropdown');
+        const arrow = document.getElementById('settings-arrow');
+        dropdown?.classList.toggle('hidden');
+        if (arrow) arrow.textContent = dropdown?.classList.contains('hidden') ? '▾' : '▴';
+      });
+
+      // Sub panels
+      function togglePanel(panelId) {
+        ['more-map-panel','more-lf-panel','more-emergency-panel'].forEach(id => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          if (id === panelId) el.classList.toggle('hidden');
+          else el.classList.add('hidden');
+        });
+      }
+      document.getElementById('more-map-btn')?.addEventListener('click', () => togglePanel('more-map-panel'));
+      document.getElementById('more-lf-btn')?.addEventListener('click', () => togglePanel('more-lf-panel'));
+      document.getElementById('more-emergency-btn')?.addEventListener('click', () => togglePanel('more-emergency-panel'));
+
+      // Bug report
+      document.getElementById('more-bug-btn')?.addEventListener('click', () => showModal('bug-modal'));
+      document.getElementById('submit-bug')?.addEventListener('click', submitBugReport);
+
+      // Lost & Found
+      document.querySelectorAll('.lf-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.lf-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          loadLostFound(tab.dataset.tab);
+        });
+      });
+      document.getElementById('report-item-btn')?.addEventListener('click', () =>
+        requireAuth(() => showModal('lost-item-modal'))
+      );
+      document.getElementById('submit-item')?.addEventListener('click', submitLostItem);
+
+      // Load default LF tab
+      loadLostFound('lost');
+    };
+  </script>
+</body>
+</html>
