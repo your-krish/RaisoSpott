@@ -1269,3 +1269,34 @@ body.dark .toast { background: var(--surface2); }
 #page-more { padding-top: 16px; }
 #page-profile { padding-top: 0; }
 
+
+/* ===== MPA NAV LINK STYLES ===== */
+/* Make <a> nav links look identical to old <button> nav-btns */
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex: 1;
+  padding: 8px 4px;
+  border: none;
+  background: none;
+  color: var(--text3);
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color var(--transition);
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-link .nav-icon { font-size: 22px; line-height: 1; }
+.nav-link .nav-label { font-size: 10px; font-weight: 600; }
+.nav-link.active { color: var(--primary); }
+.nav-link:hover { color: var(--primary); }
+
+/* main content: no need for .page show/hide in MPA — content always visible */
+#main-content {
+  display: block !important;
+}
