@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RaisoSpot Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #7C3AED;
+      --gradient: linear-gradient(135deg, #7C3AED, #9F67FA);
+      --danger: #E63946;
+      --success: #2D9E5B;
+      --warning: #F59E0B;
+      --bg: #F5F3FF;
+      --surface: #fff;
+      --surface2: #EDE9FE;
+      --border: #DDD6FE;
+      --text: #1C1917;
+      --text2: #5B4E8A;
+      --text3: #A394C7;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(124,58,237,0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* LOGIN */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient);
+    }
+    .login-box {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .login-logo { font-size: 48px; margin-bottom: 12px; }
+    .login-box h1 { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+    .login-box p { color: var(--text2); font-size: 14px; margin-bottom: 28px; }
+    .btn-google {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: white; border: 2px solid var(--border);
+      padding: 14px 20px; border-radius: 12px; font-size: 15px; font-weight: 600;
+      width: 100%; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s;
+    }
+    .btn-google:hover { background: var(--surface2); }
+    .access-denied {
+      background: #FEE2E2; border: 1px solid #FECACA;
+      border-radius: 10px; padding: 12px; font-size: 13px; color: #991B1B;
+      margin-top: 16px; display: none;
+    }
+
+    /* LAYOUT */
+    #admin-screen { display: none; }
+    .admin-layout { display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 240px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 10;
+    }
+    .sidebar-logo {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      background: var(--gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .sidebar-logo p { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+    .sidebar-nav { flex: 1; padding: 12px 8px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      font-size: 14px; font-weight: 500; color: var(--text2);
+      cursor: pointer; transition: all 0.2s; margin-bottom: 2px;
+      border: none; background: none; width: 100%; text-align: left;
+    }
+    .nav-item:hover { background: var(--surface2); color: var(--primary); }
+    .nav-item.active { background: var(--surface2); color: var(--primary); font-weight: 700; }
+    .nav-item .nav-icon { font-size: 18px; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--danger);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .sidebar-footer { padding: 16px; border-top: 1px solid var(--border); }
+    .admin-user { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .admin-user img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+    .admin-user-info p { font-size: 13px; font-weight: 600; }
+    .admin-user-info span { font-size: 11px; color: var(--text3); }
+    .btn-logout {
+      background: #FEE2E2; color: var(--danger);
+      border: none; border-radius: 8px; padding: 8px 12px;
+      font-size: 13px; font-weight: 600; cursor: pointer; width: 100%;
+    }
+
+    /* MAIN */
+    .admin-main {
+      margin-left: 240px;
+      flex: 1;
+      padding: 24px;
+    }
+
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* STATS CARDS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .stat-card .stat-icon { font-size: 28px; margin-bottom: 8px; }
+    .stat-card .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .stat-card .stat-label { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+    /* SECTIONS */
+    .admin-section { display: none; }
+    .admin-section.active { display: block; }
+
+    /* TABLE */
+    .table-wrap {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+    .table-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .table-header h3 { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; }
+    .table-wrap table { width: 100%; border-collapse: collapse; }
+    .table-wrap th {
+      background: var(--surface2);
+      padding: 10px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text3);
+    }
+    .table-wrap td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      vertical-align: middle;
+    }
+    .table-wrap tr:last-child td { border-bottom: none; }
+    .table-wrap tr:hover td { background: var(--surface2); }
+
+    /* BADGES */
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .badge-open { background: #FEF3C7; color: #92400E; }
+    .badge-resolved { background: #D1FAE5; color: #065F46; }
+    .badge-active { background: #EDE9FE; color: #6D28D9; }
+    .badge-removed { background: #FEE2E2; color: #991B1B; }
+    .badge-hidden { background: #F3F4F6; color: #6B7280; }
+    .badge-confession { background: #FCE7F3; color: #9D174D; }
+    .badge-image { background: #DBEAFE; color: #1E40AF; }
+    .badge-announcement { background: #FEF3C7; color: #92400E; }
+
+    /* ACTION BUTTONS */
+    .btn-sm {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.2s;
+    }
+    .btn-sm:hover { opacity: 0.8; }
+    .btn-resolve { background: #D1FAE5; color: #065F46; }
+    .btn-remove { background: #FEE2E2; color: #991B1B; }
+    .btn-restore { background: #EDE9FE; color: #6D28D9; }
+    .btn-make-admin { background: var(--gradient); color: white; }
+    .btn-primary-sm {
+      background: var(--gradient); color: white;
+      padding: 8px 16px; border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; border: none; font-family: 'DM Sans', sans-serif;
+    }
+
+    /* POST PREVIEW */
+    .post-preview-img {
+      width: 40px; height: 40px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+    .post-caption-text {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* EMPTY STATE */
+    .empty-row td {
+      text-align: center;
+      padding: 40px;
+      color: var(--text3);
+      font-size: 14px;
+    }
+
+    /* LOADING */
+    .loading-row td { text-align: center; padding: 30px; color: var(--text3); }
+
+    /* CREATE OPP FORM */
+    .form-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+    .form-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .form-grid.full { grid-template-columns: 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--text2); }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--primary); }
+
+    /* TOAST */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a2e; color: white;
+      padding: 12px 20px; border-radius: 20px;
+      font-size: 14px; font-weight: 500;
+      z-index: 999; display: none;
+      white-space: nowrap;
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .sidebar { width: 200px; }
+      .admin-main { margin-left: 200px; padding: 16px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">📍</div>
+    <h1>RaisoSpot Admin</h1>
+    <p>Sign in with your admin Google account to continue</p>
+    <button class="btn-google" id="login-btn">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+      Sign in with Google
+    </button>
+    <div class="access-denied" id="access-denied">
+      ⛔ Access denied. Your account is not an admin.
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-screen">
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h2>📍 RaisoSpot</h2>
+        <p>Admin Panel</p>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-section="dashboard">
+          <span class="nav-icon">📊</span> Dashboard
+        </button>
+        <button class="nav-item" data-section="posts">
+          <span class="nav-icon">📝</span> Posts
+        </button>
+        <button class="nav-item" data-section="reports">
+          <span class="nav-icon">🚩</span> Reports
+          <span class="nav-badge hidden" id="reports-badge">0</span>
+        </button>
+        <button class="nav-item" data-section="bugs">
+          <span class="nav-icon">🐛</span> Bug Reports
+          <span class="nav-badge hidden" id="bugs-badge">0</span>
+        </button>
+        <button class="nav-item" data-section="users">
+          <span class="nav-icon">👥</span> Users
+        </button>
+        <button class="nav-item" data-section="opportunities">
+          <span class="nav-icon">💼</span> Opportunities
+        </button>
+        <button class="nav-item" data-section="announcements">
+          <span class="nav-icon">📢</span> Announcements
+        </button>
+        <button class="nav-item" data-section="lostfound">
+          <span class="nav-icon">🔎</span> Lost &amp; Found
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="admin-user">
+          <img id="admin-avatar" src="" alt="" />
+          <div class="admin-user-info">
+            <p id="admin-name">Admin</p>
+            <span id="admin-email"></span>
+          </div>
+        </div>
+        <button class="btn-logout" id="admin-logout">Logout</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+      <!-- DASHBOARD -->
+      <div class="admin-section active" id="section-dashboard">
+        <div class="page-title">📊 Dashboard</div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📝</div>
+            <div class="stat-num" id="stat-posts">—</div>
+            <div class="stat-label">Total Posts</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-num" id="stat-users">—</div>
+            <div class="stat-label">Users</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🚩</div>
+            <div class="stat-num" id="stat-reports">—</div>
+            <div class="stat-label">Open Reports</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🐛</div>
+            <div class="stat-num" id="stat-bugs">—</div>
+            <div class="stat-label">Open Bugs</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">❤️</div>
+            <div class="stat-num" id="stat-likes">—</div>
+            <div class="stat-label">Total Likes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💬</div>
+            <div class="stat-num" id="stat-comments">—</div>
+            <div class="stat-label">Comments</div>
+          </div>
+        </div>
+
+        <!-- Recent posts -->
+        <div class="table-wrap">
+          <div class="table-header"><h3>🕐 Recent Posts</h3></div>
+          <table>
+            <thead><tr><th>Type</th><th>Caption</th><th>Author</th><th>Status</th><th>Time</th></tr></thead>
+            <tbody id="recent-posts-body"><tr class="loading-row"><td colspan="5">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- POSTS -->
+      <div class="admin-section" id="section-posts">
+        <div class="page-title">📝 All Posts</div>
+        <div class="table-wrap">
+          <div class="table-header">
+            <h3>Posts</h3>
+            <select id="posts-filter" style="border:1.5px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;background:var(--surface);cursor:pointer">
+              <option value="active">Active</option>
+              <option value="removed">Removed</option>
+              <option value="hidden">Hidden</option>
+            </select>
+          </div>
+          <table>
+            <thead><tr><th>Type</th><th>Preview</th><th>Author</th><th>Likes</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="posts-body"><tr class="loading-row"><td colspan="7">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REPORTS -->
+      <div class="admin-section" id="section-reports">
+        <div class="page-title">🚩 Reported Posts</div>
+        <div class="table-wrap">
+          <div class="table-header"><h3>Open Reports</h3></div>
+          <table>
+            <thead><tr><th>Post Caption</th><th>Reporter</th><th>Reason</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="reports-body"><tr class="loading-row"><td colspan="5">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BUGS -->
+      <div class="admin-section" id="section-bugs">
+        <div class="page-title">🐛 Bug Reports</div>
+        <div class="table-wrap">
+          <div class="table-header"><h3>Open Bug Reports</h3></div>
+          <table>
+            <thead><tr><th>Description</th><th>Reporter</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="bugs-body"><tr class="loading-row"><td colspan="5">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- USERS -->
+      <div class="admin-section" id="section-users">
+        <div class="page-title">👥 Users</div>
+        <div class="table-wrap">
+          <div class="table-header"><h3>All Users</h3></div>
+          <table>
+            <thead><tr><th>Avatar</th><th>Name</th><th>Email</th><th>Admin</th><th>Joined</th><th>Actions</th></tr></thead>
+            <tbody id="users-body"><tr class="loading-row"><td colspan="6">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- OPPORTUNITIES -->
+      <div class="admin-section" id="section-opportunities">
+        <div class="page-title">💼 Opportunities</div>
+
+        <div class="form-card">
+          <h3>➕ Add New Opportunity</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Title *</label>
+              <input type="text" id="opp-title" placeholder="e.g. Summer Internship 2025" />
+            </div>
+            <div class="form-group">
+              <label>Organization</label>
+              <input type="text" id="opp-org" placeholder="e.g. TechCorp India" />
+            </div>
+            <div class="form-group">
+              <label>Type *</label>
+              <select id="opp-type">
+                <option value="internship">Internship</option>
+                <option value="placement">Placement</option>
+                <option value="hackathon">Hackathon</option>
+                <option value="competition">Competition</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Deadline</label>
+              <input type="date" id="opp-deadline" />
+            </div>
+            <div class="form-group">
+              <label>Apply URL</label>
+              <input type="url" id="opp-url" placeholder="https://..." />
+            </div>
+            <div class="form-group">
+              <label>Eligible Years (comma separated)</label>
+              <input type="text" id="opp-years" placeholder="1,2,3,4" />
+            </div>
+          </div>
+          <div class="form-grid full">
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="opp-desc" rows="3" placeholder="Brief description..."></textarea>
+            </div>
+          </div>
+          <button class="btn-primary-sm" id="add-opp-btn">Add Opportunity</button>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-header"><h3>All Opportunities</h3></div>
+          <table>
+            <thead><tr><th>Title</th><th>Org</th><th>Type</th><th>Deadline</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="opps-body"><tr class="loading-row"><td colspan="6">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ANNOUNCEMENTS -->
+      <div class="admin-section" id="section-announcements">
+        <div class="page-title">📢 Announcements</div>
+
+        <div class="form-card">
+          <h3>➕ Post New Announcement</h3>
+          <div class="form-grid full">
+            <div class="form-group">
+              <label>Announcement Text *</label>
+              <textarea id="ann-text" rows="3" placeholder="Write your announcement..."></textarea>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group" style="flex-direction:row;align-items:center;gap:10px">
+              <input type="checkbox" id="ann-pin" style="width:auto" />
+              <label for="ann-pin" style="font-size:14px;cursor:pointer">Pin this announcement</label>
+            </div>
+          </div>
+          <button class="btn-primary-sm" id="post-ann-btn">Post Announcement</button>
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-header"><h3>All Announcements</h3></div>
+          <table>
+            <thead><tr><th>Text</th><th>Pinned</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="ann-body"><tr class="loading-row"><td colspan="5">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- LOST & FOUND -->
+      <div class="admin-section" id="section-lostfound">
+        <div class="page-title">🔎 Lost &amp; Found</div>
+        <div class="table-wrap">
+          <div class="table-header"><h3>All Items</h3></div>
+          <table>
+            <thead><tr><th>Item</th><th>Location</th><th>Contact</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="lf-body"><tr class="loading-row"><td colspan="6">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+// ===== CONFIG =====
+const SUPABASE_URL = 'https://kechmfekacwpplzogjue.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_p1lITBsEZxM7tCUdO42ShA_FAIvo57F';
+const { createClient } = window.supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let adminUser = null;
+let adminProfile = null;
+
+// ===== UTILS =====
+function toast(msg, dur = 3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.style.display = 'none', dur);
+}
+
+function timeAgo(d) {
+  const diff = Date.now() - new Date(d).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return m + 'm ago';
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + 'h ago';
+  return Math.floor(h / 24) + 'd ago';
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function badgeHtml(status) {
+  const map = {
+    active: 'badge-active', removed: 'badge-removed', hidden: 'badge-hidden',
+    open: 'badge-open', resolved: 'badge-resolved',
+    image: 'badge-image', confession: 'badge-confession', announcement: 'badge-announcement'
+  };
+  return `<span class="badge ${map[status] || 'badge-active'}">${status}</span>`;
+}
+
+// ===== AUTH =====
+document.getElementById('login-btn').addEventListener('click', async () => {
+  await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.href }
+  });
+});
+
+document.getElementById('admin-logout').addEventListener('click', async () => {
+  await sb.auth.signOut();
+  location.reload();
+});
+
+async function initAdmin() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+
+  adminUser = session.user;
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', adminUser.id).single();
+  adminProfile = profile;
+
+  if (!profile?.is_admin) {
+    document.getElementById('access-denied').style.display = 'block';
+    await sb.auth.signOut();
+    return;
+  }
+
+  // Show admin panel
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-screen').style.display = 'block';
+
+  document.getElementById('admin-avatar').src = adminUser.user_metadata?.avatar_url || '';
+  document.getElementById('admin-name').textContent = profile.name || 'Admin';
+  document.getElementById('admin-email').textContent = adminUser.email;
+
+  loadDashboard();
+}
+
+// ===== NAVIGATION =====
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    const section = btn.dataset.section;
+    document.getElementById('section-' + section)?.classList.add('active');
+
+    if (section === 'dashboard') loadDashboard();
+    if (section === 'posts') loadPosts();
+    if (section === 'reports') loadReports();
+    if (section === 'bugs') loadBugs();
+    if (section === 'users') loadUsers();
+    if (section === 'opportunities') loadOpportunities();
+    if (section === 'announcements') loadAnnouncements();
+    if (section === 'lostfound') loadLostFound();
+  });
+});
+
+// ===== DASHBOARD =====
+async function loadDashboard() {
+  const [posts, users, reports, bugs, likes, comments] = await Promise.all([
+    sb.from('posts').select('id', { count: 'exact' }).eq('status', 'active'),
+    sb.from('profiles').select('id', { count: 'exact' }),
+    sb.from('reports').select('id', { count: 'exact' }).eq('status', 'open'),
+    sb.from('bug_reports').select('id', { count: 'exact' }).eq('status', 'open'),
+    sb.from('likes').select('id', { count: 'exact' }),
+    sb.from('comments').select('id', { count: 'exact' }),
+  ]);
+
+  document.getElementById('stat-posts').textContent = posts.count ?? '—';
+  document.getElementById('stat-users').textContent = users.count ?? '—';
+  document.getElementById('stat-reports').textContent = reports.count ?? '—';
+  document.getElementById('stat-bugs').textContent = bugs.count ?? '—';
+  document.getElementById('stat-likes').textContent = likes.count ?? '—';
+  document.getElementById('stat-comments').textContent = comments.count ?? '—';
+
+  // Badges
+  updateBadge('reports-badge', reports.count);
+  updateBadge('bugs-badge', bugs.count);
+
+  // Recent posts
+  const { data: recent } = await sb.from('posts_with_counts').select('*')
+    .order('created_at', { ascending: false }).limit(8);
+
+  const tbody = document.getElementById('recent-posts-body');
+  tbody.innerHTML = '';
+  if (!recent?.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">No posts yet</td></tr>';
+    return;
+  }
+  recent.forEach(p => {
+    tbody.innerHTML += `<tr>
+      <td>${badgeHtml(p.type)}</td>
+      <td><div class="post-caption-text">${esc(p.caption) || '<em style="color:var(--text3)">No caption</em>'}</div></td>
+      <td>${p.type === 'confession' ? '<em>Anonymous</em>' : esc(p.author_name || 'Unknown')}</td>
+      <td>${badgeHtml(p.status)}</td>
+      <td>${timeAgo(p.created_at)}</td>
+    </tr>`;
+  });
+}
+
+function updateBadge(id, count) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (count > 0) { el.textContent = count; el.classList.remove('hidden'); }
+  else el.classList.add('hidden');
+}
+
+// ===== POSTS =====
+async function loadPosts(status = 'active') {
+  const tbody = document.getElementById('posts-body');
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="7">Loading...</td></tr>';
+
+  const { data } = await sb.from('posts_with_counts').select('*').eq('status', status)
+    .order('created_at', { ascending: false }).limit(50);
+
+  tbody.innerHTML = '';
+  if (!data?.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No posts found</td></tr>';
+    return;
+  }
+
+  data.forEach(p => {
+    const imgHtml = p.images?.[0]
+      ? `<img src="${p.images[0]}" class="post-preview-img" alt="" />`
+      : `<span style="color:var(--text3);font-size:12px">${esc(p.caption?.slice(0, 30)) || '—'}</span>`;
+
+    const actions = p.status === 'active'
+      ? `<button class="btn-sm btn-remove" onclick="removePost('${p.id}')">Remove</button>`
+      : `<button class="btn-sm btn-restore" onclick="restorePost('${p.id}')">Restore</button>`;
+
+    tbody.innerHTML += `<tr>
+      <td>${badgeHtml(p.type)}</td>
+      <td>${imgHtml}</td>
+      <td>${p.type === 'confession' ? '<em>Anonymous</em>' : esc(p.author_name || '—')}</td>
+      <td>❤️ ${p.like_count || 0}</td>
+      <td>${badgeHtml(p.status)}</td>
+      <td>${timeAgo(p.created_at)}</td>
+      <td>${actions}</td>
+    </tr>`;
+  });
+}
+
+document.getElementById('posts-filter')?.addEventListener('change', e => loadPosts(e.target.value));
+
+async function removePost(id) {
+  if (!confirm('Remove this post?')) return;
+  await sb.from('posts').update({ status: 'removed' }).eq('id', id);
+  toast('Post removed');
+  loadPosts(document.getElementById('posts-filter').value);
+}
+
+async function restorePost(id) {
+  await sb.from('posts').update({ status: 'active' }).eq('id', id);
+  toast('Post restored ✅');
+  loadPosts(document.getElementById('posts-filter').value);
+}
+
+// ===== REPORTS =====
+async function loadReports() {
+  const tbody = document.getElementById('reports-body');
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="5">Loading...</td></tr>';
+
+  const { data } = await sb.from('reports').select(`
+    *, posts(caption, type), profiles!reporter_id(name, email)
+  `).order('created_at', { ascending: false });
+
+  tbody.innerHTML = '';
+  if (!data?.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">No reports 🎉</td></tr>';
+    return;
+  }
+
+  data.forEach(r => {
+    tbody.innerHTML += `<tr>
+      <td><div class="post-caption-text">${esc(r.posts?.caption) || '—'} ${badgeHtml(r.posts?.type || '')}</div></td>
+      <td>${esc(r.profiles?.name || r.profiles?.email || 'Unknown')}</td>
+      <td>${esc(r.reason || '—')}</td>
+      <td>${timeAgo(r.created_at)}</td>
+      <td style="display:flex;gap:6px">
+        <button class="btn-sm btn-remove" onclick="removeReportedPost('${r.post_id}', '${r.id}')">Remove Post</button>
+        <button class="btn-sm btn-resolve" onclick="resolveReport('${r.id}')">Dismiss</button>
+      </td>
+    </tr>`;
+  });
+}
+
+async function removeReportedPost(postId, reportId) {
+  if (!confirm('Remove this reported post?')) return;
+  await sb.from('posts').update({ status: 'removed' }).eq('id', postId);
+  await sb.from('reports').update({ status: 'resolved' }).eq('id', reportId);
+  toast('Post removed & report resolved');
+  loadReports();
+  loadDashboard();
+}
+
+async function resolveReport(reportId) {
+  await sb.from('reports').update({ status: 'resolved' }).eq('id', reportId);
+  toast('Report dismissed');
+  loadReports();
+  loadDashboard();
+}
+
+// ===== BUGS =====
+async function loadBugs() {
+  const tbody = document.getElementById('bugs-body');
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="5">Loading...</td></tr>';
+
+  const { data } = await sb.from('bug_reports').select(`
+    *, profiles(name, email)
+  `).order('created_at', { ascending: false });
+
+  tbody.innerHTML = '';
+  if (!data?.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">No bug reports 🎉</td></tr>';
+    return;
+  }
+
+  data.forEach(b => {
+    tbody.innerHTML += `<tr>
+      <td style="max-width:300px">${esc(b.description)}</td>
+      <td>${esc(b.profiles?.name || b.profiles?.email || 'Guest')}</td>
+      <td>${badgeHtml(b.status)}</td>
+      <td>${timeAgo(b.created_at)}</td>
+      <td>
+        ${b.status === 'open'
+          ? `<button class="btn-sm btn-resolve" onclick="resolveBug('${b.id}')">Mark Resolved</button>`
+          : '<span style="color:var(--text3);font-size:12px">Done</span>'
+        }
+      </td>
+    </tr>`;
+  });
+}
+
+async function resolveBug(id) {
+  await sb.from('bug_reports').update({ status: 'resolved' }).eq('id', id);
+  toast('Bug marked resolved ✅');
+  loadBugs();
+  loadDashboard();
+}
+
+// ===== USERS =====
+async function loadUsers() {
+  const tbody = document.getElementById('users-body');
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="6">Loading...</td></tr>';
+
+  const { data } = await sb.from('profiles').select('*').order('created_at', { ascending: false });
+
+  tbody.innerHTML = '';
+  if (!data?.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No users yet</td></tr>';
+    return;
+  }
+
+  data.forEach(u => {
+    tbody.innerHTML += `<tr>
+      <td>${u.avatar_url ? `<img src="${u.avatar_url}" class="post-preview-img" style="border-radius:50%" alt="" />` : '👤'}</td>
+      <td>${esc(u.name || '—')}</td>
+      <td>${esc(u.email || '—')}</td>
+      <td>${u.is_admin ? '✅ Admin' : '—'}</td>
+      <td>${timeAgo(u.created_at)}</td>
+      <td>
+        ${!u.is_admin
+          ? `<button class="btn-sm btn-make-admin" onclick="makeAdmin('${u.id}')">Make Admin</button>`
+          : `<button class="btn-sm btn-remove" onclick="removeAdmin('${u.id}')">Remove Admin</button>`
+        }
+      </td>
+    </tr>`;
+  });
+}
+
+async function makeAdmin(id) {
+  if (!confirm('Make this user an admin?')) return;
+  await sb.from('profiles').update({ is_admin: true }).eq('id', id);
+  toast('Admin granted ✅');
+  loadUsers();
+}
+
+async function removeAdmin(id) {
+  if (id === adminUser.id) { toast("Can't remove your own admin!"); return; }
+  if (!confirm('Remove admin from this user?')) return;
+  await sb.from('profiles').update({ is_admin: false }).eq('id', id);
+  toast('Admin removed');
+  loadUsers();
+}
+
+// ===== OPPORTUNITIES =====
+async function loadOpportunities() {
+  const tbody = document.getElementById('opps-body');
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="6">Loading...</td></tr>';
+
+  const { data } = await sb.from('opportunities').select('*').order('created_at', { ascending: false });
+
+  tbody.innerHTML = '';
+  if (!data?.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No opportunities yet</td></tr>';
+    return;
+  }
+
+  data.forEach(o => {
+    tbody.innerHTML += `<tr>
+      <td>${esc(o.title)}</td>
+      <td>${esc(o.organization || '—')}</td>
+      <td><span class="badge badge-active">${o.type}</span></td>
+      <td>${o.deadline ? new Date(o.deadline).toLocaleDateString() : '—'}</td>
+      <td>${badgeHtml(o.status)}</td>
+      <td style="display:flex;gap:6px">
+        ${o.status === 'active'
+          ? `<button class="btn-sm btn-remove" onclick="expireOpp('${o.id}')">Expire</button>`
+          : `<button class="btn-sm btn-restore" onclick="restoreOpp('${o.id}')">Restore</button>`
+        }
+        <button class="btn-sm btn-remove" onclick="deleteOpp('${o.id}')">Delete</button>
+      </td>
+    </tr>`;
+  });
+}
+
+document.getElementById('add-opp-btn')?.addEventListener('click', async () => {
+  const title = document.getElementById('opp-title').value.trim();
+  const org = document.getElementById('opp-org').value.trim();
+  const type = document.getElementById('opp-type').value;
+  const deadline = document.getElementById('opp-deadline').value;
+  const url = document.getElementById('opp-url').value.trim();
+  const yearsRaw = document.getElementById('opp-years').value.trim();
+  const desc = document.getElementById('opp-desc').value.trim();
+
+  if (!title) { toast('Title is required'); return; }
+
+  const years = yearsRaw ? yearsRaw.split(',').map(y => parseInt(y.trim())).filter(Boolean) : [];
+
+  const { error } = await sb.from('opportunities').insert({
+    title, organization: org, type, description: desc,
+    apply_url: url || null,
+    deadline: deadline || null,
+    eligible_years: years.length ? years : null,
+    status: 'active'
+  });
+
+  if (!error) {
+    toast('Opportunity added ✅');
+    document.getElementById('opp-title').value = '';
+    document.getElementById('opp-org').value = '';
+    document.getElementById('opp-url').value = '';
+    document.getElementById('opp-years').value = '';
+    document.getElementById('opp-desc').value = '';
+    document.getElementById('opp-deadline').value = '';
+    loadOpportunities();
+  } else {
+    toast('Failed: ' + error.message);
+  }
+});
+
+async function expireOpp(id) {
+  await sb.from('opportunities').update({ status: 'expired' }).eq('id', id);
+  toast('Marked as expired');
+  loadOpportunities();
+}
+async function restoreOpp(id) {
+  await sb.from('opportunities').update({ status: 'active' }).eq('id', id);
+  toast('Restored ✅');
+  loadOpportunities();
+}
+async function deleteOpp(id) {
+  if (!confirm('Permanently delete?')) return;
+  await sb.from('opportunities').delete().eq('id', id);
+  toast('Deleted');
+  loadOpportunities();
+}
+
+// ===== ANNOUNCEMENTS =====
+async function loadAnnouncements() {
+  const tbody = document.getElementById('ann-body');
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="5">Loading...</td></tr>';
+
+  const { data } = await sb.from('posts').select('*').eq('type', 'announcement')
+    .order('created_at', { ascending: false });
+
+  tbody.innerHTML = '';
+  if (!data?.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">No announcements yet</td></tr>';
+    return;
+  }
+
+  data.forEach(a => {
+    tbody.innerHTML += `<tr>
+      <td style="max-width:280px">${esc(a.caption)}</td>
+      <td>${a.is_pinned ? '📌 Yes' : '—'}</td>
+      <td>${badgeHtml(a.status)}</td>
+      <td>${timeAgo(a.created_at)}</td>
+      <td style="display:flex;gap:6px">
+        <button class="btn-sm ${a.is_pinned ? 'btn-resolve' : 'btn-restore'}" onclick="togglePin('${a.id}', ${a.is_pinned})">
+          ${a.is_pinned ? 'Unpin' : 'Pin'}
+        </button>
+        <button class="btn-sm btn-remove" onclick="removePost('${a.id}')">Remove</button>
+      </td>
+    </tr>`;
+  });
+}
+
+document.getElementById('post-ann-btn')?.addEventListener('click', async () => {
+  const text = document.getElementById('ann-text').value.trim();
+  const pin = document.getElementById('ann-pin').checked;
+  if (!text) { toast('Write announcement text'); return; }
+
+  const { error } = await sb.from('posts').insert({
+    user_id: adminUser.id,
+    type: 'announcement',
+    caption: text,
+    images: [],
+    is_pinned: pin,
+    status: 'active'
+  });
+
+  if (!error) {
+    toast('Announcement posted ✅');
+    document.getElementById('ann-text').value = '';
+    document.getElementById('ann-pin').checked = false;
+    loadAnnouncements();
+  } else {
+    toast('Failed: ' + error.message);
+  }
+});
+
+async function togglePin(id, current) {
+  await sb.from('posts').update({ is_pinned: !current }).eq('id', id);
+  toast(current ? 'Unpinned' : 'Pinned 📌');
+  loadAnnouncements();
+}
+
+// ===== LOST & FOUND =====
+async function loadLostFound() {
+  const tbody = document.getElementById('lf-body');
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="6">Loading...</td></tr>';
+
+  const { data } = await sb.from('lost_found').select('*').order('created_at', { ascending: false });
+
+  tbody.innerHTML = '';
+  if (!data?.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No items</td></tr>';
+    return;
+  }
+
+  data.forEach(item => {
+    tbody.innerHTML += `<tr>
+      <td>${esc(item.name)}</td>
+      <td>${esc(item.location || '—')}</td>
+      <td>${esc(item.contact || '—')}</td>
+      <td>${badgeHtml(item.status)}</td>
+      <td>${timeAgo(item.created_at)}</td>
+      <td>
+        ${item.status !== 'resolved'
+          ? `<button class="btn-sm btn-resolve" onclick="resolveLF('${item.id}')">Resolve</button>`
+          : '<span style="color:var(--text3);font-size:12px">Done</span>'
+        }
+      </td>
+    </tr>`;
+  });
+}
+
+async function resolveLF(id) {
+  await sb.from('lost_found').update({ status: 'resolved' }).eq('id', id);
+  toast('Marked as resolved ✅');
+  loadLostFound();
+}
+
+// ===== BOOT =====
+initAdmin();
+</script>
+</body>
+</html>
